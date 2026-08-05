@@ -555,6 +555,19 @@
         </div>
     </section>
 
+    <!-- Dashboard Section -->
+    <section id="dashboard" class="section">
+        <div class="services">
+            <h2>Welcome to Your Dashboard</h2>
+            <p style="text-align: center; color: #666; max-width: 800px; margin: 0 auto 30px;">You are now logged in. Use this dashboard as your launch point for services, support, and account management.</p>
+            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                <button class="cta-button" onclick="showSection('services')">Explore Services</button>
+                <button class="cta-button whatsapp-btn" onclick="openWhatsApp('contact')">Contact Support</button>
+                <button class="cta-button" style="background: #ff6b6b; color: white;" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </section>
+
     <!-- Services Section -->
     <section id="services" class="section">
         <div class="services">
@@ -723,15 +736,15 @@
                 return;
             }
 
-            loginMessage.textContent = 'Login successful! Redirecting to home...';
+            loginMessage.textContent = 'Login successful! Redirecting to your dashboard...';
             loginMessage.style.background = '#d1e7dd';
             loginMessage.style.color = '#0f5132';
             loginMessage.classList.add('show');
             document.getElementById('loginForm').reset();
 
             setTimeout(() => {
-                showSection('home');
-            }, 1500);
+                showSection('dashboard');
+            }, 800);
             console.log('Logged in user:', data.user);
         }
 
@@ -767,7 +780,7 @@
                 return;
             }
 
-            registerMessage.textContent = 'Registration started. Check your email for the OTP code and enter it below to verify your account.';
+            registerMessage.textContent = 'Registration started. Check your email for the confirmation link or OTP code, then enter it below if required.';
             registerMessage.style.background = '#d1e7dd';
             registerMessage.style.color = '#0f5132';
             registerMessage.classList.add('show');
@@ -783,8 +796,16 @@
             registerMessage.classList.remove('show');
             registerMessage.textContent = '';
 
-            if (!pendingEmail || !token) {
-                registerMessage.textContent = 'Please submit your registration email first and enter the OTP code.';
+            if (!pendingEmail) {
+                registerMessage.textContent = 'Please submit the registration form first so we know which email to verify.';
+                registerMessage.style.background = '#f8d7da';
+                registerMessage.style.color = '#842029';
+                registerMessage.classList.add('show');
+                return;
+            }
+
+            if (!token) {
+                registerMessage.textContent = 'Please enter the OTP code you received in your email.';
                 registerMessage.style.background = '#f8d7da';
                 registerMessage.style.color = '#842029';
                 registerMessage.classList.add('show');
@@ -798,14 +819,14 @@
             });
 
             if (error) {
-                registerMessage.textContent = error.message;
+                registerMessage.textContent = 'OTP verification failed: ' + error.message + '. If your project uses email confirmation links, please use the link sent to your email instead.';
                 registerMessage.style.background = '#f8d7da';
                 registerMessage.style.color = '#842029';
                 registerMessage.classList.add('show');
                 return;
             }
 
-            registerMessage.textContent = 'OTP verified successfully! Your account is now active.';
+            registerMessage.textContent = 'Verification succeeded! Your account is now active.';
             registerMessage.style.background = '#d1e7dd';
             registerMessage.style.color = '#0f5132';
             registerMessage.classList.add('show');
@@ -815,6 +836,10 @@
             setTimeout(() => {
                 showSection('login');
             }, 1500);
+        }
+
+        function logout() {
+            showSection('login');
         }
 
         function handleSupportForm(event) {

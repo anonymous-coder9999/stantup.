@@ -418,6 +418,7 @@
             background: #1e9d5f;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.min.js"></script>
 </head>
 <body>
     <!-- Header -->
@@ -427,6 +428,7 @@
             <nav>
                 <a onclick="showSection('home')">Home</a>
                 <a onclick="showSection('login')">Login</a>
+                <a onclick="showSection('register')">Register</a>
                 <a onclick="showSection('services')">Services</a>
                 <a onclick="showSection('support')">Support</a>
             </nav>
@@ -434,12 +436,12 @@
     </header>
 
     <!-- Home Section -->
-    <section id="home" class="section active">
+    <section id="home" class="section">
         <div class="hero">
             <h1>Grow Your Small Business Globally</h1>
             <p>Let us manage your Instagram profile and build your online presence</p>
             <button class="cta-button" onclick="showSection('login')">Get Started</button>
-            <a href="https://www.instagram.com/gyan.zo?igsh=MWhhZGh1NGF0MHVvcQ%3D%3D&utm_source=qr" class="cta-button-secondary" target="_blank">Follow Us</a>
+            <a href="https://www.instagram.com/tech.freakyy?igsh=MWhhZGh1NGF0MHVvcQ%3D%3D&utm_source=qr" class="cta-button-secondary" target="_blank">Follow Us</a>
         </div>
 
         <div class="services">
@@ -477,47 +479,78 @@
     </section>
 
     <!-- Login Section -->
-    <section id="login" class="section">
+    <section id="login" class="section active">
         <div class="form-container">
-            <h2>Welcome to STANTUP</h2>
-            <div class="success-message" id="successMessage">
-                We've received your information! Our team will contact you soon.
-            </div>
-            
-            <div class="login-form">
-                <h3>Create Your Account</h3>
-                <form id="loginForm" onsubmit="handleLogin(event)">
-                    <div class="form-group">
-                        <label for="name">Full Name *</label>
-                        <input type="text" id="name" name="name" required placeholder="Enter your full name">
-                    </div>
+            <h2>Login to STANTUP</h2>
+            <div class="success-message" id="loginMessage"></div>
 
-                    <div class="form-group">
-                        <label for="email">Email Address *</label>
-                        <input type="email" id="email" name="email" required placeholder="Enter your email">
-                    </div>
-
-                    <div class="form-group optional">
-                        <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="instagram">Instagram Username *</label>
-                        <input type="text" id="instagram" name="instagram" required placeholder="Your Instagram username">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="password">Instagram Password *</label>
-                        <input type="password" id="password" name="password" required placeholder="Your Instagram password">
-                    </div>
-
-                    <button type="submit" class="cta-button" style="width: 100%; border: none; cursor: pointer;">Create Account</button>
-                </form>
-
-                <div class="form-footer">
-                    Already have an account? <a onclick="showSection('home')">Go back home</a>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address *</label>
+                    <input type="email" id="loginEmail" name="email" required placeholder="Enter your email">
                 </div>
+
+                <div class="form-group">
+                    <label for="loginPassword">Password *</label>
+                    <input type="password" id="loginPassword" name="password" required placeholder="Enter your password">
+                </div>
+
+                <button type="submit" class="cta-button" style="width: 100%; border: none; cursor: pointer;">Login</button>
+            </form>
+
+            <div class="form-footer" style="margin-top: 20px;">
+                Don't have an account? <a onclick="showSection('register')">Register here</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Register Section -->
+    <section id="register" class="section">
+        <div class="form-container">
+            <h2>Register for STANTUP</h2>
+            <div class="success-message" id="registerMessage"></div>
+
+            <form id="registerForm" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="registerName">Full Name *</label>
+                    <input type="text" id="registerName" name="name" required placeholder="Enter your full name">
+                </div>
+
+                <div class="form-group">
+                    <label for="registerEmail">Email Address *</label>
+                    <input type="email" id="registerEmail" name="email" required placeholder="Enter your email">
+                </div>
+
+                <div class="form-group">
+                    <label for="registerPassword">Password *</label>
+                    <input type="password" id="registerPassword" name="password" required placeholder="Create a password">
+                </div>
+
+                <div class="form-group">
+                    <label for="registerPhone">Phone Number</label>
+                    <input type="tel" id="registerPhone" name="phone" placeholder="Enter your phone number">
+                </div>
+
+                <div class="form-group">
+                    <label for="registerIdentity">Identity Number</label>
+                    <input type="text" id="registerIdentity" name="identity" placeholder="Enter your identity number">
+                </div>
+
+                <button type="submit" class="cta-button" style="width: 100%; border: none; cursor: pointer;">Register</button>
+            </form>
+
+            <div id="otpSection" style="display: none; margin-top: 30px; text-align: left;">
+                <h3>Verify Your Email</h3>
+                <p>Enter the OTP code sent to your email to complete registration.</p>
+                <div class="form-group">
+                    <label for="otpCode">OTP Code</label>
+                    <input type="text" id="otpCode" placeholder="Enter OTP code">
+                </div>
+                <button class="cta-button" onclick="verifyOtp()" style="width: 100%; border: none; cursor: pointer;">Verify OTP</button>
+            </div>
+
+            <div class="form-footer" style="margin-top: 20px;">
+                Already have an account? <a onclick="showSection('login')">Login here</a>
             </div>
         </div>
     </section>
@@ -642,12 +675,17 @@
         <p>&copy; 2024 STANTUP. All rights reserved.</p>
         <p>Help small businesses grow globally with our comprehensive digital solutions.</p>
         <div style="margin-top: 15px;">
-            <a href="https://www.instagram.com/gyan.zo?igsh=MWhhZGh1NGF0MHVvcQ%3D%3D&utm_source=qr" target="_blank" class="cta-button instagram-link-btn" style="margin: 10px 10px;">Follow Us</a>
+            <a href="https://www.instagram.com/tech.freakyy?igsh=MWhhZGh1NGF0MHVvcQ%3D%3D&utm_source=qr" target="_blank" class="cta-button instagram-link-btn" style="margin: 10px 10px;">Follow Us</a>
             <button class="cta-button whatsapp-btn" onclick="openWhatsApp('contact')" style="margin: 10px 10px;">Contact Us</button>
         </div>
     </footer>
 
     <script>
+        // Supabase configuration - replace with your own project URL and anon key
+        const SUPABASE_URL = 'https://qsnsuhjubumjrongxjve.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFzbnN1aGp1YnVtanJvbmd4anZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU5MzU2MDgsImV4cCI6MjEwMTUxMTYwOH0.hpoaPEzuCAqU5nDrwTMAmEuTGgrwxRXDRB4PFUZKaOQ';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         function showSection(sectionId) {
             // Hide all sections
             const sections = document.querySelectorAll('.section');
@@ -663,29 +701,120 @@
             }
         }
 
-        function handleLogin(event) {
+        async function handleLogin(event) {
             event.preventDefault();
 
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
-            const instagram = document.getElementById('instagram').value;
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const loginMessage = document.getElementById('loginMessage');
+            loginMessage.classList.remove('show');
+            loginMessage.textContent = '';
 
-            // Show success message
-            const successMessage = document.getElementById('successMessage');
-            successMessage.classList.add('show');
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email,
+                password
+            });
 
-            // Reset form
+            if (error) {
+                loginMessage.textContent = error.message;
+                loginMessage.style.background = '#f8d7da';
+                loginMessage.style.color = '#842029';
+                loginMessage.classList.add('show');
+                return;
+            }
+
+            loginMessage.textContent = 'Login successful! Redirecting to home...';
+            loginMessage.style.background = '#d1e7dd';
+            loginMessage.style.color = '#0f5132';
+            loginMessage.classList.add('show');
             document.getElementById('loginForm').reset();
 
-            // Hide success message after 5 seconds
             setTimeout(() => {
-                successMessage.classList.remove('show');
                 showSection('home');
-            }, 3000);
+            }, 1500);
+            console.log('Logged in user:', data.user);
+        }
 
-            // In a real application, you would send this data to a server
-            console.log('Form submitted:', { name, email, phone, instagram });
+        async function handleRegister(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const phone = document.getElementById('registerPhone').value;
+            const identity = document.getElementById('registerIdentity').value;
+            const registerMessage = document.getElementById('registerMessage');
+            registerMessage.classList.remove('show');
+            registerMessage.textContent = '';
+
+            const { data, error } = await supabase.auth.signUp({
+                email,
+                password,
+                options: {
+                    data: {
+                        full_name: name,
+                        phone,
+                        identity
+                    }
+                }
+            });
+
+            if (error) {
+                registerMessage.textContent = error.message;
+                registerMessage.style.background = '#f8d7da';
+                registerMessage.style.color = '#842029';
+                registerMessage.classList.add('show');
+                return;
+            }
+
+            registerMessage.textContent = 'Registration started. Check your email for the OTP code and enter it below to verify your account.';
+            registerMessage.style.background = '#d1e7dd';
+            registerMessage.style.color = '#0f5132';
+            registerMessage.classList.add('show');
+            document.getElementById('otpSection').style.display = 'block';
+            document.getElementById('registerForm').dataset.pendingEmail = email;
+            document.getElementById('registerForm').reset();
+        }
+
+        async function verifyOtp() {
+            const pendingEmail = document.getElementById('registerForm').dataset.pendingEmail;
+            const token = document.getElementById('otpCode').value;
+            const registerMessage = document.getElementById('registerMessage');
+            registerMessage.classList.remove('show');
+            registerMessage.textContent = '';
+
+            if (!pendingEmail || !token) {
+                registerMessage.textContent = 'Please submit your registration email first and enter the OTP code.';
+                registerMessage.style.background = '#f8d7da';
+                registerMessage.style.color = '#842029';
+                registerMessage.classList.add('show');
+                return;
+            }
+
+            const { data, error } = await supabase.auth.verifyOtp({
+                email: pendingEmail,
+                token,
+                type: 'signup'
+            });
+
+            if (error) {
+                registerMessage.textContent = error.message;
+                registerMessage.style.background = '#f8d7da';
+                registerMessage.style.color = '#842029';
+                registerMessage.classList.add('show');
+                return;
+            }
+
+            registerMessage.textContent = 'OTP verified successfully! Your account is now active.';
+            registerMessage.style.background = '#d1e7dd';
+            registerMessage.style.color = '#0f5132';
+            registerMessage.classList.add('show');
+            document.getElementById('otpSection').style.display = 'none';
+            document.getElementById('otpCode').value = '';
+            console.log('Verified signup:', data.user || data.session);
+            setTimeout(() => {
+                showSection('login');
+            }, 1500);
         }
 
         function handleSupportForm(event) {
@@ -734,7 +863,7 @@
 
             const encodedMessage = encodeURIComponent(message);
             const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-            window.open(whatsappUrl, '_blank');
+            window.open(whatsappUrl, '_Yashvirblank');
         }
     </script>
 </body>

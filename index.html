@@ -559,6 +559,7 @@
     <section id="dashboard" class="section">
         <div class="services">
             <h2>Welcome to Your Dashboard</h2>
+            <p id="dashboardUserDisplay" style="text-align: center; color: #666; max-width: 800px; margin: 0 auto 30px;">User</p>
             <p style="text-align: center; color: #666; max-width: 800px; margin: 0 auto 30px;">You are now logged in. Use this dashboard as your launch point for services, support, and account management.</p>
             <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
                 <button class="cta-button" onclick="showSection('services')">Explore Services</button>
@@ -711,8 +712,31 @@
             if (selectedSection) {
                 selectedSection.classList.add('active');
                 window.scrollTo(0, 0);
+                window.location.hash = sectionId;
             }
         }
+
+        function updateDashboardUser(user) {
+            const dashboardUser = document.getElementById('dashboardUserDisplay');
+            if (!dashboardUser) return;
+            const name = user?.user_metadata?.full_name || user?.email || 'User';
+            dashboardUser.textContent = name;
+        }
+
+        async function initializeAuth() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session?.user) {
+                updateDashboardUser(session.user);
+                showSection('dashboard');
+                return;
+            }
+
+            const initialSection = window.location.hash ? window.location.hash.substring(1) : 'login';
+            const validSections = ['home', 'login', 'register', 'dashboard', 'services', 'support', 'support-form'];
+            showSection(validSections.includes(initialSection) ? initialSection : 'login');
+        }
+
+        window.addEventListener('DOMContentLoaded', initializeAuth);
 
         async function handleLogin(event) {
             event.preventDefault();
